@@ -71,13 +71,13 @@ def init(arch, h, act, seed_init, **args):
             torch.nn.init.normal_(m.weight, mean=0.0, std=1.0)
             if m.bias is not None:
                 torch.nn.init.normal_(m.bias, mean=0.0, std=1.0)
-        if isinstance(m, nn.MultiheadAttention):
-            torch.nn.init.normal_(m.in_proj_weight, mean=0.0, std=1.0)
-            torch.nn.init.normal_(m.out_proj.weight, mean=0.0, std=1.0)
-            if m.in_proj_bias is not None:
-                torch.nn.init.normal_(m.in_proj_bias, mean=0.0, std=1.0)
-            if m.out_proj.bias is not None:
-                torch.nn.init.normal_(m.out_proj.bias, mean=0.0, std=1.0)
+        #if isinstance(m, nn.MultiheadAttention):
+        #    torch.nn.init.normal_(m.in_proj_weight, mean=0.0, std=1.0)
+        #    torch.nn.init.normal_(m.out_proj.weight, mean=0.0, std=1.0)
+        #    if m.in_proj_bias is not None:
+        #        torch.nn.init.normal_(m.in_proj_bias, mean=0.0, std=1.0)
+        #    if m.out_proj.bias is not None:
+        #        torch.nn.init.normal_(m.out_proj.bias, mean=0.0, std=1.0)
     model.apply(init_weights)
 
     print('network initialized', flush=True)
