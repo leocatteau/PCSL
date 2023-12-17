@@ -128,13 +128,16 @@ def execute(yield_time=0.0, **args):
 
     loss = init_loss(args['loss'])
 
-    def stop_criterion(train_loss, delta_train_err, step, t, wall_time, check_train_err):
+    def stop_criterion(train_loss, train_err, delta_train_err, step, t, wall_time, check_train_err):
         if not torch.isfinite(train_loss): return True
         if train_loss<=0: 
             print(f"train_loss {train_loss} <= 0", flush=True)
             return True
-        if check_train_err and delta_train_err==0: 
-            print(f"train_error didn't change in the last epoch: delta train error = {delta_train_err}", flush=True)
+        #if check_train_err and delta_train_err==0: 
+        #    print(f"train_error didn't change in the last epoch: delta train error = {delta_train_err}", flush=True)
+        #    return True
+        if train_err <= args['min_trainerr']: 
+            print(f"train_err {train_err} <= min_trainerr {args['min_trainerr']}", flush=True)
             return True
         if step >= args['max_step']: 
             print(f"step {step} >= max_step {args['max_step']}", flush=True)
@@ -144,8 +147,8 @@ def execute(yield_time=0.0, **args):
             return True
         return False
     
-    def checkpoint_criterion(train_loss, delta_train_err, epoch, step, t, wall_time, check_train_err):
-        if stop_criterion(train_loss, delta_train_err, step, t, wall_time, check_train_err): return True
+    def checkpoint_criterion(train_loss, train_err, delta_train_err, epoch, step, t, wall_time, check_train_err):
+        if stop_criterion(train_loss, train_err, delta_train_err, step, t, wall_time, check_train_err): return True
         # if step % 100 == 0: return True
         if step == 0: return True
         if math.log2(step)%1==0.0: return True
@@ -246,7 +249,7 @@ def train(
                     check_train_err = True
 
                 wall_time = time.perf_counter() - wall0
-                if checkpoint_criterion(train_loss, delta_train_err, epoch, step, t, wall_time, check_train_err): break
+                if checkpoint_criterion(train_loss, train_err, delta_train_err, epoch, step, t, wall_time, check_train_err): break
                 if check_train_err: train_check = train_err
 
         else:
@@ -255,7 +258,7 @@ def train(
         stop = False
 
         wall_time = time.perf_counter() - wall0
-        if stop_criterion(train_loss, delta_train_err, step, t, wall_time, check_train_err): stop = True
+        if stop_criterion(train_loss, train_err, delta_train_err, step, t, wall_time, check_train_err): stop = True
 
         if start:
             print("create state (train)", flush=True)

@@ -33,6 +33,8 @@ def main():
 
     parser.add_argument("--max_wall", type=float, required=True)
     parser.add_argument("--max_step", type=float, default=float('inf'))
+    parser.add_argument("--min_trainerr", type=float, default=0)  
+
 
     parser.add_argument("--output", type=str, required=True)
     parser.add_argument("--dtype", type=str, default="f32")
