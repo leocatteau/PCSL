@@ -15,6 +15,7 @@ def main():
 
     parser.add_argument("--dataset", type=str, required=True)
     parser.add_argument("--ptr", type=int, required=True)
+    parser.add_argument("--label_noise", type=float, default=0.0)
     parser.add_argument("--pte", type=int, required=True)
     parser.add_argument("--d", type=int)
     parser.add_argument("--num_classes", type=int)

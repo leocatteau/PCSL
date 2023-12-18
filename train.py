@@ -39,6 +39,8 @@ def init(arch, h, act, seed_init, **args):
     # try to implement label noise here
     if args.get("label_noise"):
         noise_ratio = args.get("label_noise")
+        if noise_ratio > 1 or noise_ratio < 0:
+            raise ValueError(f"label noise must be between 0 and 1, but is {noise_ratio}")
         print(f"label noise: {noise_ratio}% of training points", flush=True)
         index = torch.randperm(len(ytr))[:int(noise_ratio*len(ytr))]
         ytr[index] = torch.randint(0, num_classes, size=(len(index),))
