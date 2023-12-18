@@ -36,6 +36,13 @@ def init(arch, h, act, seed_init, **args):
     num_classes = torch.cat((ytr, yte)).max().item() + 1
     input_dim = xtr.view(xtr.size(0), -1).shape[1]
 
+    # try to implement label noise here
+    if args.get("label_noise"):
+        noise_ratio = args.get("label_noise")
+        print(f"label noise: {noise_ratio}% of training points", flush=True)
+        index = torch.randperm(len(ytr))[:int(noise_ratio*len(ytr))]
+        ytr[index] = torch.randint(0, num_classes, size=(len(index),))
+
     print(f'dataset generated xtr.shape={xtr.shape} xte.shape={xte.shape}', flush=True)
     print(f'dataset on device {xtr.device}', flush=True)
 
