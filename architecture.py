@@ -102,15 +102,15 @@ class conv_block(nn.Module):
 class cnn(nn.Module):
     def __init__(self, in_dim, in_channels, out_channels, num_classes, act):
         super(cnn, self).__init__()
-        # for 32*32*(1 or 3) input
         self.act = act
 
+        a=2
         self.conv_block1 = conv_block(in_channels=in_channels,    out_channels=out_channels,    act=act) #32*32 -> 32*32 ->(pool)->16*16
-        self.conv_block2 = conv_block(in_channels=out_channels,   out_channels=out_channels*4,  act=act) #16*16 -> 16*16 ->(pool)->8*8
-        self.conv_block3 = conv_block(in_channels=out_channels*4, out_channels=out_channels*16, act=act) #8*8 -> 8*8 ->(pool)->4*4
-              
-        self.fc1 = nn.Linear(2048, 2048)   
-        self.fc2 = nn.Linear(2048 , num_classes)
+        self.conv_block2 = conv_block(in_channels=out_channels,   out_channels=out_channels*a,  act=act) #16*16 -> 16*16 ->(pool)->8*8
+        self.conv_block3 = conv_block(in_channels=out_channels*a, out_channels=out_channels*a**2, act=act) #8*8 -> 8*8 ->(pool)->4*4
+        
+        self.fc1 = nn.Linear(4*4*out_channels*a**2,  4*4*out_channels*a**2)
+        self.fc2 = nn.Linear(4*4*out_channels*a**2 , num_classes)
         
     def forward(self, x):
         x = self.conv_block1(x)

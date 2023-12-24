@@ -32,7 +32,7 @@ def init(arch, h, act, seed_init, **args):
         act = nn.Softplus()
 
     xtr, ytr, xte, yte = dataset(**args)
-    xtr, ytr, xte, yte = xtr.to(device), ytr.to(device), xte.to(device), yte.to(device)
+    #xtr, ytr, xte, yte = xtr.to(device), ytr.to(device), xte.to(device), yte.to(device)
     num_classes = torch.cat((ytr, yte)).max().item() + 1
     input_dim = xtr.view(xtr.size(0), -1).shape[1]
 
@@ -44,6 +44,7 @@ def init(arch, h, act, seed_init, **args):
         print(f"label noise: {noise_ratio}% of training points", flush=True)
         index = torch.randperm(len(ytr))[:int(noise_ratio*len(ytr))]
         ytr[index] = torch.randint(0, num_classes, size=(len(index),))
+    xtr, ytr, xte, yte = xtr.to(device), ytr.to(device), xte.to(device), yte.to(device)
 
     print(f'dataset generated xtr.shape={xtr.shape} xte.shape={xte.shape}', flush=True)
     print(f'dataset on device {xtr.device}', flush=True)
